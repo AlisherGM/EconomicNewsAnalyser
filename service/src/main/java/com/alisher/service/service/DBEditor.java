@@ -22,13 +22,17 @@ public class DBEditor {
     @Autowired
     private JdbcArticleDAO jdbcArticleDAO;
 
-    public void showAllArticles() {
-        jdbcArticleDAO.getAllArticles().forEach(System.out::println);
-    }
-
     public void saveAllArticlesFromResource() {
         ArrayList<Resource> resources = jdbcArticleDAO.getAllResources();
         resources.forEach(resource -> saveSources(resource.getUrl()));
+    }
+
+    public ArrayList<Article> getRequestArticle(String from, String to){
+        String url = "https://newsapi.org/v2/top-headlines?sources=google-news-ru&from=" + from + "&to=" + to + "&apiKey=d969caa989484163b4e39a40ec0cacfe";
+        RestTemplate restTemplate = new RestTemplate();
+        Articles articles = restTemplate.getForObject(url, Articles.class);
+        jdbcArticleDAO.insertIntoImportedSources(articles);
+        return jdbcArticleDAO.getAllImportedSources();
     }
 
     private void saveSources(String url) {

@@ -1,18 +1,19 @@
 package com.alisher.service.controllers;
 
 import com.alisher.service.dao.JdbcArticleDAO;
+import com.alisher.service.pojo.Article;
 import com.alisher.service.service.DBEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 @Controller
 public class ArticlesController {
@@ -35,10 +36,15 @@ public class ArticlesController {
         return "phrases";
     }
 
-    @PostMapping("/phrases")
-    public String getAllPhrasesByDatetime(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)Date date, ModelMap model){
-        System.out.println(date);
-        model.addAttribute("phrasesFromServer", jdbcArticleDAO.getAllPhrases());
+    @PostMapping("/phrasesByDate")
+    public String getAllPhrasesByDatetime(@RequestBody String date, ModelMap model){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        String to = dtf.format(now).toString();
+        String from = date.substring(10,20);
+        System.out.println(to + " " + from);
+        ArrayList<Article> list = dbEditor.getRequestArticle(from, to);
+        model.addAttribute("phrasesFromServer", list.subList(2, list.size()));
         return "phrases";
     }
 }

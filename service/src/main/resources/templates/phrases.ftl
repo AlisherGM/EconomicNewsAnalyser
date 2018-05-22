@@ -33,7 +33,7 @@
                     <a class="nav-link text-white" href="https://vk.com/id320596114">Contact us</a>
                 </li>
             </ul>
-            <form class="form-inline m-0" id = "date" method="post" action="/phrases">
+            <form class="form-inline m-0" id = "date" name ="date" method="post" action="/phrasesByDate">
                 <input id="party" type="datetime-local" name="partydate" class="date-cell" value="2017-06-01T08:30">
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>

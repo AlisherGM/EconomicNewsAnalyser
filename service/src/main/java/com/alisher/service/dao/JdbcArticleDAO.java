@@ -39,7 +39,7 @@ public class JdbcArticleDAO {
     }
 
     //language=SQL
-    private String insertIntoArticlesRequest = "insert into articles(source, author, title, description, url, urltoimage, publishedat) values (?,?,?,?,?,?,?)";
+    private String insertIntoArticlesRequest = "insert into articles(source, author, title, description, url, urltoimage, publishedat) values (?,?,?,?,?,?,?) on conflict do nothing;";
     public void insertIntoArticles(Articles articles) {
         List<Object[]> list = new ArrayList<>();
         for(Article article: articles.getArticles())
@@ -90,5 +90,29 @@ public class JdbcArticleDAO {
                     rs.getDate("publishedat")
             );
         }));
+    }
+
+    public ArrayList<Article> getAllImportedSources() {
+        return new ArrayList<Article>(jdbcTemplate.query(getAllArticlesRequest, (rs, rowNum) -> {
+            return new Article(
+                    rs.getLong("id"),
+                    new Source(rs.getString("source").toLowerCase(), rs.getString("source").toUpperCase()),
+                    rs.getString("author"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getString("url"),
+                    rs.getString("urltoimage"),
+                    rs.getDate("publishedat")
+            );
+        }));
+    }
+
+    //language=SQL
+    private String insertIntoImportslesRequest = "insert into imports(source, author, title, description, url, urltoimage, publishedat) values (?,?,?,?,?,?,?) on conflict do nothing;";
+    public void insertIntoImportedSources(Articles articles) {
+        List<Object[]> list = new ArrayList<>();
+        for(Article article: articles.getArticles())
+            list.add(new Object[]{article.getSource().getName(), article.getAuthor(), article.getTitle(), article.getDescription(), article.getUrl(), article.getUrlToImage(), article.getPublishedAt()});
+        jdbcTemplate.batchUpdate(insertIntoArticlesRequest, list);
     }
 }
