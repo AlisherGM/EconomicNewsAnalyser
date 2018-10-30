@@ -43,7 +43,15 @@ public class JdbcArticleDAO {
     public void insertIntoArticles(Articles articles) {
         List<Object[]> list = new ArrayList<>();
         for(Article article: articles.getArticles())
-            list.add(new Object[]{article.getSource().getName(), article.getAuthor(), article.getTitle(), article.getDescription(), article.getUrl(), article.getUrlToImage(), article.getPublishedAt()});
+            list.add(new Object[] {
+                article.getSource().getName(),
+                article.getAuthor(),
+                article.getTitle(),
+                article.getDescription(),
+                article.getUrl(),
+                article.getUrlToImage(),
+                article.getPublishedAt()
+            });
         jdbcTemplate.batchUpdate(insertIntoArticlesRequest, list);
     }
 
@@ -65,13 +73,16 @@ public class JdbcArticleDAO {
     public void insertIntoPhrases(Articles articles) {
         List<Object[]> list = new ArrayList<>();
         for(Article article: articles.getArticles())
-            list.add(new Object[]{siq.nextInt(1000), article.getTitle()});
+            list.add(new Object[] {
+                siq.nextInt(1000),
+                article.getTitle()
+            });
         jdbcTemplate.batchUpdate(insertIntoPhrasesRequest, list);
     }
 
     //language=SQL
     private String deleteAll="delete from phrases; delete from articles;";
-    public void deleteAll(){
+    public void deleteAll() {
         jdbcTemplate.update(deleteAll);
     }
 
@@ -112,7 +123,15 @@ public class JdbcArticleDAO {
     public void insertIntoImportedSources(Articles articles) {
         List<Object[]> list = new ArrayList<>();
         for(Article article: articles.getArticles())
-            list.add(new Object[]{article.getSource().getName(), article.getAuthor(), article.getTitle(), article.getDescription(), article.getUrl(), article.getUrlToImage(), article.getPublishedAt()});
+            list.add(new Object[] {
+                article.getSource().getName(),
+                article.getAuthor(),
+                article.getTitle(),
+                article.getDescription(),
+                article.getUrl(),
+                article.getUrlToImage(),
+                article.getPublishedAt()
+            });
         jdbcTemplate.batchUpdate(insertIntoArticlesRequest, list);
     }
 }
