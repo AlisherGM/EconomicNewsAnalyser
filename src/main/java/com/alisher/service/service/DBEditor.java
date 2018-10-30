@@ -5,6 +5,7 @@ import com.alisher.service.dao.JdbcArticleDAO;
 import com.alisher.service.pojo.Article;
 import com.alisher.service.pojo.Articles;
 import com.alisher.service.pojo.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -18,9 +19,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@RequiredArgsConstructor
 public class DBEditor {
-    @Autowired
-    private JdbcArticleDAO jdbcArticleDAO;
+    private final JdbcArticleDAO jdbcArticleDAO;
 
     public void saveAllArticlesFromResource() {
         ArrayList<Resource> resources = jdbcArticleDAO.getAllResources();
@@ -42,8 +43,7 @@ public class DBEditor {
 //            jdbcArticleDAO.deleteAll();
             jdbcArticleDAO.insertIntoArticles(articles);
             jdbcArticleDAO.insertIntoPhrases(articles);
-        } catch (Exception e) {
-
+        } catch (Exception ignore) {
         }
     }
 }
