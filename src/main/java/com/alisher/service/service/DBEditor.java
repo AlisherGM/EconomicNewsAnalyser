@@ -1,6 +1,5 @@
 package com.alisher.service.service;
 
-
 import com.alisher.service.dao.JdbcArticleDAO;
 import com.alisher.service.pojo.Article;
 import com.alisher.service.pojo.Articles;
@@ -21,15 +20,18 @@ import java.util.regex.Pattern;
 @Component
 @RequiredArgsConstructor
 public class DBEditor {
+    private static final startUrl = "https://newsapi.org/v2/top-headlines?sources=google-news-ru&from=";
+    private static final transitUrl = "&to=";
+    private static final endUrl = "&apiKey=d969caa989484163b4e39a40ec0cacfe";
     private final JdbcArticleDAO jdbcArticleDAO;
-
+    
     public void saveAllArticlesFromResource() {
         ArrayList<Resource> resources = jdbcArticleDAO.getAllResources();
         resources.forEach(resource -> saveSources(resource.getUrl()));
     }
 
     public ArrayList<Article> getRequestArticle(String from, String to){
-        String url = "https://newsapi.org/v2/top-headlines?sources=google-news-ru&from=" + from + "&to=" + to + "&apiKey=d969caa989484163b4e39a40ec0cacfe";
+        String url = startUrl + from + transitUrl + to + endUrl;
         RestTemplate restTemplate = new RestTemplate();
         Articles articles = restTemplate.getForObject(url, Articles.class);
         jdbcArticleDAO.insertIntoImportedSources(articles);
