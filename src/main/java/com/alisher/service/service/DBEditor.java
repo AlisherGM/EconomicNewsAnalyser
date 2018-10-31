@@ -5,24 +5,17 @@ import com.alisher.service.pojo.Article;
 import com.alisher.service.pojo.Articles;
 import com.alisher.service.pojo.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
 public class DBEditor {
-    private static final startUrl = "https://newsapi.org/v2/top-headlines?sources=google-news-ru&from=";
-    private static final transitUrl = "&to=";
-    private static final endUrl = "&apiKey=d969caa989484163b4e39a40ec0cacfe";
+    private static final String START_URL = "https://newsapi.org/v2/top-headlines?sources=google-news-ru&from=";
+    private static final String TRANSIT_URL = "&to=";
+    private static final String END_URL = "&apiKey=d969caa989484163b4e39a40ec0cacfe";
     private final JdbcArticleDAO jdbcArticleDAO;
     
     public void saveAllArticlesFromResource() {
@@ -31,7 +24,7 @@ public class DBEditor {
     }
 
     public ArrayList<Article> getRequestArticle(String from, String to){
-        String url = startUrl + from + transitUrl + to + endUrl;
+        String url = START_URL + from + TRANSIT_URL + to + END_URL;
         RestTemplate restTemplate = new RestTemplate();
         Articles articles = restTemplate.getForObject(url, Articles.class);
         jdbcArticleDAO.insertIntoImportedSources(articles);
